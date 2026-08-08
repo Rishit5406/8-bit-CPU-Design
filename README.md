@@ -71,11 +71,6 @@ So `out_port` walks up 1, 2, 3, 4, ... and wraps around at 255 because ACC is on
 | `zf` | 1 | Zero flag — set when the last ALU result was zero. Only `JZ` reads it. |
 | `out_port` | 8 | Output port — the CPU's only way of showing the outside world anything. |
 
-The accumulator design is what keeps this CPU so small: there's no register file, no operand
-selection logic, no write-back muxing. One operand is *always* ACC, the other is *always* the
-immediate from the instruction, and the result *always* goes back into ACC. That means the
-instruction only has to say what operation to do, not where the data comes from or goes.
-
 ---
 
 ## Instruction format
