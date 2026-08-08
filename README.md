@@ -1,4 +1,4 @@
-# 8-bit Accumulator-Based CPU (Verilog)
+# 8-bit CPU Design
 
 A small, single-accumulator CPU written in Verilog and verified in simulation. It has a
 program ROM, an 8-bit ALU, a 5-state control FSM, and an output port. 
