@@ -4,60 +4,36 @@ module cpu_top (
     output reg  [7:0] out_port
 );
 
-    // ============================
     // Registers 
-    // ============================
     reg [7:0]  pc;
     reg [15:0] ir;
     reg [7:0]  acc;
     reg        zf;
 
-    // ============================
-    // ROM interface instantiation
-    // ============================
+    // ROM instantiation
     wire [15:0] rom_data;
+    ROM u_rom (.addr(pc), .data(rom_data));
 
-    ROM u_rom (
-        .addr(pc),
-        .data(rom_data)
-    );
-
-    // ============================
     // Decode
-    // ============================
     wire [3:0] opcode = ir[15:12];
     wire [7:0] imm    = ir[7:0];
 
-    // ============================
     // ALU instantiation
-    // ============================
     reg  [2:0] alu_sel;
     wire [7:0] alu_y;
     wire       alu_z;
 
-    ALU u_alu (
-        .a   (acc),
-        .b   (imm),
-        .sel (alu_sel),
-        .y   (alu_y),
-        .z   (alu_z)
-    );
+    ALU u_alu (.a(acc), .b(imm), .sel(alu_sel), .y(alu_y), .z(alu_z) );
 
-    // ============================
     // FSM states
-    // ============================
     reg [2:0] state, next_state;
-
-    // Defining states using parameters
     parameter S_FETCH     = 3'd0;
     parameter S_DECODE    = 3'd1;
     parameter S_EXEC_ALU  = 3'd2;
     parameter S_EXEC_BR   = 3'd3;
     parameter S_EXEC_OUT  = 3'd4;
 
-    // ============================
-    // Next-state logic (combinational)
-    // ============================
+    // Next-state logic 
     always @(*) begin
         next_state = state;
         case (state)
@@ -86,9 +62,7 @@ module cpu_top (
         endcase
     end
 
-    // ============================
-    // ALU control (combinational)
-    // ============================
+    // ALU control 
     always @(*) begin
         alu_sel = 3'b000;  // default
         case (opcode)
@@ -101,9 +75,7 @@ module cpu_top (
         endcase
     end
 
-    // ============================
     // Sequential logic (register updates)
-    // ============================
     always @(posedge clk) begin
         if (!rst_n) begin
             state    <= S_FETCH;
@@ -142,10 +114,8 @@ module cpu_top (
                 S_EXEC_OUT: begin
                     out_port <= acc;
                 end
-
                 default: ;
             endcase
         end
     end
-
 endmodule
