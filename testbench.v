@@ -3,13 +3,7 @@ module test_bench;
     reg clk;
     reg rst_n;
     wire [7:0] out_port;
-
-    cpu_top uut (
-        .clk(clk),
-        .rst_n(rst_n),
-        .out_port(out_port)
-    );
-
+    cpu_top uut (.clk(clk), .rst_n(rst_n), .out_port(out_port));
     initial begin
         clk = 0;
         forever #5 clk = ~clk;  
